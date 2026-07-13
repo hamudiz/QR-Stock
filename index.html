@@ -3,37 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Withdraw QR Scanner</title>
-  <link rel="stylesheet" href="./style.css">
-  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <title>Direct POST Test</title>
 </head>
 <body>
-  <main class="app">
-    <section class="card">
-      <h1>Withdraw</h1>
-      <p class="subtitle">Scan QR code and submit withdrawal log.</p>
+  <h2>Direct POST Test</h2>
 
-      <form id="withdrawForm" method="POST" target="_blank">
-        <label for="name">Your Name</label>
-        <input id="name" name="name" type="text" placeholder="Enter your name" required>
+  <form action="YOUR_APPS_SCRIPT_EXEC_URL" method="post" target="_blank">
+    <label>
+      Name:
+      <input type="text" name="name" value="Test User">
+    </label>
+    <br><br>
 
-        <label for="item">Scanned Item</label>
-        <input id="item" name="item" type="text" placeholder="Scan QR to fill item" readonly required>
+    <label>
+      Item:
+      <input type="text" name="item" value="Laptop A">
+    </label>
+    <br><br>
 
-        <div class="button-row">
-          <button id="startBtn" type="button">Start Scanner</button>
-          <button id="stopBtn" type="button" class="secondary">Stop Scanner</button>
-        </div>
-
-        <div id="reader"></div>
-
-        <button id="submitBtn" type="submit" class="submit-btn">Withdraw</button>
-      </form>
-
-      <p id="status" class="status"></p>
-    </section>
-  </main>
-
-  <script src="./app.js"></script>
+    <input type="submit" value="Send POST Test">
+  </form>
 </body>
 </html>
