@@ -3,25 +3,259 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Direct POST Test</title>
+  <title>QR Stock Withdraw</title>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f3f6fb;
+      color: #1f2937;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 24px 16px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 460px;
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+
+    .subtitle {
+      margin: 0 0 18px;
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    label {
+      display: block;
+      margin-top: 14px;
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    input,
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 10px;
+    }
+
+    input {
+      border: 1px solid #d1d5db;
+      background: #fff;
+    }
+
+    input[readonly] {
+      background: #f9fafb;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .button-row button {
+      flex: 1;
+    }
+
+    button {
+      border: none;
+      background: #2563eb;
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button.secondary {
+      background: #6b7280;
+    }
+
+    .submit-btn {
+      margin-top: 16px;
+    }
+
+    #reader {
+      width: 100%;
+      margin-top: 16px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #111827;
+      min-height: 80px;
+    }
+
+    .status {
+      min-height: 22px;
+      margin-top: 14px;
+      font-size: 14px;
+    }
+
+    .status.ok {
+      color: #15803d;
+    }
+
+    .status.err {
+      color: #b91c1c;
+    }
+
+    .note {
+      margin-top: 14px;
+      padding: 12px;
+      background: #eff6ff;
+      border-radius: 10px;
+      font-size: 13px;
+      color: #1e3a8a;
+    }
+
+    @media (max-width: 480px) {
+      .button-row {
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h2>Direct POST Test</h2>
+  <main class="app">
+    <section class="card">
+      <h1>Withdraw</h1>
+      <p class="subtitle">Scan QR code and submit stock withdrawal.</p>
 
-  <form action="YOUR_APPS_SCRIPT_EXEC_URL" method="post" target="_blank">
-    <label>
-      Name:
-      <input type="text" name="name" value="Test User">
-    </label>
-    <br><br>
+      <form
+        id="withdrawForm"
+        action="PASTE_YOUR_REAL_APPS_SCRIPT_EXEC_URL_HERE"
+        method="post"
+        target="_blank"
+      >
+        <label for="name">Your Name</label>
+        <input
+          id="name"
+          name="name"
+          type="text"
+          placeholder="Enter your name"
+          required
+        >
 
-    <label>
-      Item:
-      <input type="text" name="item" value="Laptop A">
-    </label>
-    <br><br>
+        <label for="item">Scanned Item</label>
+        <input
+          id="item"
+          name="item"
+          type="text"
+          placeholder="Scan QR code to fill item"
+          readonly
+          required
+        >
 
-    <input type="submit" value="Send POST Test">
-  </form>
+        <div class="button-row">
+          <button id="startBtn" type="button">Start Scanner</button>
+          <button id="stopBtn" type="button" class="secondary">Stop Scanner</button>
+        </div>
+
+        <div id="reader"></div>
+
+        <button id="submitBtn" type="submit" class="submit-btn">Withdraw</button>
+      </form>
+
+      <p id="status" class="status"></p>
+
+      <div class="note">
+        After pressing Withdraw, the result should open in a new tab from Google Apps Script.
+      </div>
+    </section>
+  </main>
+
+  <script>
+    let scanner = null;
+    let scannerRunning = false;
+
+    const form = document.getElementById("withdrawForm");
+    const nameInput = document.getElementById("name");
+    const itemInput = document.getElementById("item");
+    const statusEl = document.getElementById("status");
+    const startBtn = document.getElementById("startBtn");
+    const stopBtn = document.getElementById("stopBtn");
+
+    function setStatus(message, type = "") {
+      statusEl.textContent = message;
+      statusEl.className = "status" + (type ? ` ${type}` : "");
+    }
+
+    function startScanner() {
+      if (scannerRunning) return;
+
+      setStatus("Starting camera...");
+      scanner = new Html5QrcodeScanner(
+        "reader",
+        {
+          fps: 10,
+          qrbox: { width: 220, height: 220 },
+          rememberLastUsedCamera: true
+        },
+        false
+      );
+
+      scanner.render(onScanSuccess, onScanFailure);
+      scannerRunning = true;
+    }
+
+    function stopScanner() {
+      if (scanner) {
+        scanner.clear().catch(() => {});
+      }
+      scanner = null;
+      scannerRunning = false;
+      setStatus("Scanner stopped.");
+    }
+
+    function onScanSuccess(decodedText) {
+      itemInput.value = decodedText.trim();
+      setStatus("QR scanned: " + decodedText, "ok");
+      stopScanner();
+    }
+
+    function onScanFailure(error) {
+    }
+
+    form.addEventListener("submit", function (e) {
+      const name = nameInput.value.trim();
+      const item = itemInput.value.trim();
+
+      if (!name) {
+        e.preventDefault();
+        setStatus("Please enter your name.", "err");
+        return;
+      }
+
+      if (!item) {
+        e.preventDefault();
+        setStatus("Please scan an item QR code first.", "err");
+        return;
+      }
+
+      setStatus("Submitting to Apps Script...", "ok");
+    });
+
+    startBtn.addEventListener("click", startScanner);
+    stopBtn.addEventListener("click", stopScanner);
+  </script>
 </body>
 </html>
