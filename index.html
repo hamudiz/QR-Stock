@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Withdraw QR Scanner</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+</head>
+<body>
+  <main class="app">
+    <section class="card">
+      <h1>Withdraw</h1>
+      <p class="subtitle">Scan item QR code and submit withdrawal log.</p>
+
+      <label for="name">Your Name</label>
+      <input id="name" type="text" placeholder="Enter your name">
+
+      <label for="item">Scanned Item</label>
+      <input id="item" type="text" placeholder="Scan QR code to fill item" readonly>
+
+      <div class="button-row">
+        <button id="startBtn" type="button">Start Scanner</button>
+        <button id="stopBtn" type="button" class="secondary">Stop Scanner</button>
+      </div>
+
+      <div id="reader"></div>
+
+      <button id="submitBtn" type="button" class="submit-btn">Withdraw</button>
+
+      <p id="status" class="status"></p>
+    </section>
+  </main>
+
+  <script src="./app.js"></script>
+</body>
+</html>
