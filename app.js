@@ -1,7 +1,7 @@
 let scanner = null;
 let scannerRunning = false;
 
-const APPS_SCRIPT_URL = "PASTE_YOUR_APPS_SCRIPT_EXEC_URL_HERE";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwg8Ui6J4YzAEnOhvEo3-v8Kj6iAZbLCyM3qYbhZHmuN0aMhGqZkzMXWQG62AWYhGHQ/exec";
 
 const form = document.getElementById("withdrawForm");
 const nameInput = document.getElementById("name");
