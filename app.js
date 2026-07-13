@@ -67,7 +67,7 @@ async function submitWithdraw() {
   setStatus("Submitting...");
 
   try {
-    const response = await fetch("PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE", {
+    const response = await fetch("https://script.google.com/macros/s/AKfycbxeJPQfLaekRGXk8bZPh1BP9psM_UC3Nyib0mzydnGPfXWwXj01gG04mafosqI6SP1Y/exec", {
       method: "POST",
       headers: {
         "Content-Type": "text/plain;charset=utf-8"
