@@ -11,22 +11,24 @@
   <main class="app">
     <section class="card">
       <h1>Withdraw</h1>
-      <p class="subtitle">Scan item QR code and submit withdrawal log.</p>
+      <p class="subtitle">Scan QR code and submit withdrawal log.</p>
 
-      <label for="name">Your Name</label>
-      <input id="name" type="text" placeholder="Enter your name">
+      <form id="withdrawForm" method="POST" target="_blank">
+        <label for="name">Your Name</label>
+        <input id="name" name="name" type="text" placeholder="Enter your name" required>
 
-      <label for="item">Scanned Item</label>
-      <input id="item" type="text" placeholder="Scan QR code to fill item" readonly>
+        <label for="item">Scanned Item</label>
+        <input id="item" name="item" type="text" placeholder="Scan QR to fill item" readonly required>
 
-      <div class="button-row">
-        <button id="startBtn" type="button">Start Scanner</button>
-        <button id="stopBtn" type="button" class="secondary">Stop Scanner</button>
-      </div>
+        <div class="button-row">
+          <button id="startBtn" type="button">Start Scanner</button>
+          <button id="stopBtn" type="button" class="secondary">Stop Scanner</button>
+        </div>
 
-      <div id="reader"></div>
+        <div id="reader"></div>
 
-      <button id="submitBtn" type="button" class="submit-btn">Withdraw</button>
+        <button id="submitBtn" type="submit" class="submit-btn">Withdraw</button>
+      </form>
 
       <p id="status" class="status"></p>
     </section>
