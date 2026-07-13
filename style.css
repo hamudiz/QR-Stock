@@ -83,11 +83,6 @@ button.secondary {
   background: #6b7280;
 }
 
-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
 .submit-btn {
   margin-top: 16px;
 }
